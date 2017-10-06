@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# input check 
+if [ $# -ne 1 ]; 
+then
+    echo""
+    echo "Currently running sessions -"
+    echo "__________________________________"    
+    ls -lrt -d -1 --color /tmp/{*,.*} | egrep srw | awk '{ sub(/([^ ]+ +){5}/,"") }1' 
+    echo""
+    exit
+else
+    dtach -a $1 -r winch
+fi

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+FIFO="/tmp/dvtm-status.$$"
+
+[ -e "$FIFO" ] || mkfifo "$FIFO"
+chmod 600 $FIFO
+
+while true; do
+    echo "$1 :" $(date +%H:%M)
+    sleep 60
+done > $FIFO &
+
+STATUS_PID=$!
+dtach -c "$1" -r winch dvtm -h 9999 -t "$1" -m "^g" -s $FIFO 2> /dev/null
+kill $STATUS_PID
+rm $FIFO
